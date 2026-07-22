@@ -38,8 +38,12 @@ resource "azurerm_static_web_app_custom_domain" "apex" {
   validation_type   = "dns-txt-token"
 }
 
-# www subdomain uses CNAME delegation, which validates against the CNAME record
-# managed in dns.tf (hence the explicit dependency).
+# www subdomain uses CNAME delegation. Azure validates it by resolving
+# www.<domain> on the public internet, so it can only be created AFTER the zone
+# is delegated at the registrar. For a brand-new zone, keep enable_www = false on
+# the first apply, delegate the name servers, then set enable_www = true and
+# apply again — otherwise this resource hangs waiting on a CNAME that isn't
+# publicly resolvable yet. See README "Custom domain (Azure DNS)".
 resource "azurerm_static_web_app_custom_domain" "www" {
   count = local.manage_custom_domain && var.enable_www ? 1 : 0
 

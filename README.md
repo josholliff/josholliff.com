@@ -86,38 +86,82 @@ automatically. The live URL is the `static_web_app_default_hostname` output
 ## Custom domain (Azure DNS)
 
 Terraform **creates and owns the Azure DNS zone** plus the Static Web App
-custom-domain registration and all records, end-to-end. Set in
-`terraform.tfvars`:
+custom-domain registration and all records. Because a brand-new zone gets a
+brand-new set of Azure name servers, and Azure validates custom domains by
+resolving them on the public internet, bringing up a **new** domain is a
+**two-phase** process. Do not try to attach `www` in the same apply that creates
+the zone — see the ordering below.
+
+### Phase 1 — zone, apex, and records (before delegation)
+
+In `terraform.tfvars`:
 
 ```hcl
 custom_domain = "josholliff.com"
-enable_www    = true
+enable_www    = false   # IMPORTANT: keep www OFF until the domain is delegated
 # dns_zone_resource_group_name = "josholliff-com-rg"  # RG for the zone (must exist)
 ```
 
-Then `terraform apply`. Terraform creates the **`azurerm_dns_zone`** and:
-
-| Record | Name | Type  | Points to                                  |
-| ------ | ---- | ----- | ------------------------------------------ |
-| apex   | `@`  | A     | ALIAS → the Static Web App resource        |
-| valid. | `@`  | TXT   | the apex validation token                  |
-| www    | `www`| CNAME | `<name>.azurestaticapps.net`               |
-
-Because the zone is brand new, its Azure name servers must be set as the
-delegation (NS) records at your **domain registrar** before validation and TLS
-can complete. Read them after apply and update the registrar:
-
 ```bash
-terraform output -json dns_zone_name_servers
+terraform apply
 ```
 
-Apex validation via `dns-txt-token` is asynchronous — the provider does not wait
-for it, and the TXT record is written from the token in the same apply. Once the
-registrar delegation points at the Azure name servers, Azure completes validation
-and issues the managed TLS certificate (NS delegation can take up to ~48h to
-propagate, though it's usually much faster). The zone is created in
-`resource_group_name` by default; set `dns_zone_resource_group_name` to place it
-in a different (already existing) resource group.
+Terraform creates the **`azurerm_dns_zone`** and:
+
+| Record | Name | Type  | Points to                            |
+| ------ | ---- | ----- | ------------------------------------ |
+| apex   | `@`  | A     | ALIAS → the Static Web App resource  |
+| valid. | `@`  | TXT   | the apex validation token            |
+
+Apex validation (`dns-txt-token`) is **asynchronous** — the provider writes the
+token, doesn't block, and Azure validates later once DNS resolves.
+
+### Phase 2 — delegate the registrar, then attach www
+
+1. Read the zone's assigned name servers and set them at your registrar:
+
+   ```bash
+   terraform output -json dns_zone_name_servers
+   # or: az network dns zone show -g josholliff-com-rg -n josholliff.com --query nameServers -o tsv
+   ```
+
+2. Wait for delegation to go live (usually minutes, up to ~48h):
+
+   ```bash
+   nslookup -type=ns josholliff.com   # should return the *.azure-dns.* servers
+   ```
+
+3. Now flip www on and apply again:
+
+   ```hcl
+   enable_www = true
+   ```
+   ```bash
+   terraform apply
+   ```
+
+   This adds the `www` CNAME (→ `<name>.azurestaticapps.net`) and the
+   `www` custom domain. `www` uses **cname-delegation**, which Azure can only
+   validate once the domain is delegated to this zone — that's why it must come
+   after phase 2, or the apply will hang waiting on a CNAME that isn't publicly
+   resolvable yet.
+
+> The zone is created in `resource_group_name` by default; set
+> `dns_zone_resource_group_name` to place it in a different (already existing) RG.
+
+## Deploy the site content
+
+Provisioning the app does **not** publish the site — until content is uploaded,
+the URL shows Azure's "Congratulations on your new site!" placeholder. Publish
+`src/` with the deployment token (from the terraform folder):
+
+```bash
+# PowerShell
+$env:SWA_CLI_DEPLOYMENT_TOKEN = (terraform output -raw deployment_token)
+npx -y @azure/static-web-apps-cli deploy ../src --env production
+```
+
+Or rely on the GitHub Actions workflow (see *Wire up deployment* above).
 
 ## Local preview
 
