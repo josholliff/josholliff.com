@@ -21,8 +21,8 @@ output "custom_domain_validation_token" {
 }
 
 output "dns_zone_name_servers" {
-  description = "Name servers of the existing Azure DNS zone. Confirm these match the NS your registrar is delegated to."
-  value       = local.manage_custom_domain ? data.azurerm_dns_zone.this[0].name_servers : []
+  description = "Name servers assigned to the created Azure DNS zone. Set these as the NS records at your domain registrar so the zone becomes authoritative."
+  value       = local.manage_custom_domain ? azurerm_dns_zone.this[0].name_servers : []
 }
 
 output "custom_domains" {
