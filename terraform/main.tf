@@ -23,6 +23,13 @@ resource "azurerm_static_web_app" "this" {
 # dns-txt-token validation is asynchronous: the provider returns immediately with
 # a validation token and does not wait for DNS to propagate, so there is no
 # chicken-and-egg deadlock with the TXT record created from that token.
+# The apex custom-domain resource was previously named ".this". This moved block
+# renames it in state instead of destroying and recreating the existing binding.
+moved {
+  from = azurerm_static_web_app_custom_domain.this
+  to   = azurerm_static_web_app_custom_domain.apex
+}
+
 resource "azurerm_static_web_app_custom_domain" "apex" {
   count = local.manage_custom_domain ? 1 : 0
 
