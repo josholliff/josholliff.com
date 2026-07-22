@@ -51,6 +51,24 @@ variable "dns_zone_resource_group_name" {
   default     = ""
 }
 
+variable "manage_github_secret" {
+  description = "When true, Terraform writes the Static Web App deployment token to the GitHub repo as the AZURE_STATIC_WEB_APPS_API_TOKEN Actions secret. Requires a GITHUB_TOKEN env var with rights to manage the repo's secrets."
+  type        = bool
+  default     = false
+}
+
+variable "github_owner" {
+  description = "GitHub account/org that owns the repository (e.g. \"josholliff\"). Used only when manage_github_secret = true."
+  type        = string
+  default     = "josholliff"
+}
+
+variable "github_repository" {
+  description = "GitHub repository name to write the deployment-token secret into (e.g. \"josholliff.com\"). Used only when manage_github_secret = true."
+  type        = string
+  default     = "josholliff.com"
+}
+
 variable "tags" {
   description = "Tags applied to all resources."
   type        = map(string)

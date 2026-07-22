@@ -51,13 +51,36 @@ terraform output -raw deployment_token
 
 ## Wire up deployment
 
-Add the token as a repository secret so the workflow can publish content:
+The `.github/workflows/deploy.yml` workflow uploads `src/` to the Static Web App
+on every push to `main` (and builds preview environments for PRs). It needs one
+repository secret, `AZURE_STATIC_WEB_APPS_API_TOKEN`, set to the deployment
+token. Two ways to set it:
 
-- **Secret name:** `AZURE_STATIC_WEB_APPS_API_TOKEN`
-- **Value:** the `deployment_token` output above
+**Option 1 — Terraform sets it for you (recommended).** In `terraform.tfvars`:
 
-Push to `main` (or merge a PR) and the workflow deploys `src/` automatically.
-The live URL is the `static_web_app_default_hostname` output
+```hcl
+manage_github_secret = true
+github_owner         = "josholliff"
+github_repository    = "josholliff.com"
+```
+
+Export a GitHub token with rights to manage the repo's Actions secrets, then
+apply:
+
+```bash
+export GITHUB_TOKEN=ghp_xxx   # PowerShell: $env:GITHUB_TOKEN="ghp_xxx"
+terraform apply
+```
+
+Terraform writes the `AZURE_STATIC_WEB_APPS_API_TOKEN` secret from the app's live
+token — no copy-paste, and it stays in sync on future applies.
+
+**Option 2 — set it manually.** Copy `terraform output -raw deployment_token`
+into GitHub → repo **Settings → Secrets and variables → Actions** → new secret
+named `AZURE_STATIC_WEB_APPS_API_TOKEN`.
+
+Either way, push to `main` (or merge a PR) and the workflow deploys `src/`
+automatically. The live URL is the `static_web_app_default_hostname` output
 (`https://<name>.azurestaticapps.net`).
 
 ## Custom domain (Azure DNS)

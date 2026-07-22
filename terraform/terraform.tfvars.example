@@ -14,6 +14,12 @@ sku_tier            = "Free"
 # dns_zone_name                = "josholliff.com"
 # dns_zone_resource_group_name = "josholliff-com-rg"
 
+# Let Terraform push the deployment token to GitHub as the
+# AZURE_STATIC_WEB_APPS_API_TOKEN Actions secret (needs GITHUB_TOKEN env var).
+manage_github_secret = true
+github_owner         = "josholliff"
+github_repository    = "josholliff.com"
+
 tags = {
   project   = "josholliff.com"
   managedBy = "terraform"
