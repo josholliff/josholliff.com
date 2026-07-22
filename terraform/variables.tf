@@ -40,13 +40,13 @@ variable "enable_www" {
 }
 
 variable "dns_zone_name" {
-  description = "Name of the Azure DNS zone to create for the custom domain. Defaults to custom_domain when empty."
+  description = "Name of the existing Azure DNS zone to add records to. Defaults to custom_domain when empty."
   type        = string
   default     = ""
 }
 
 variable "dns_zone_resource_group_name" {
-  description = "Resource group in which to create the Azure DNS zone. Defaults to resource_group_name when empty. If set to a different resource group, that group must already exist."
+  description = "Resource group that contains the existing Azure DNS zone. Defaults to resource_group_name when empty. Set this if your zone lives in a different resource group than the Static Web App."
   type        = string
   default     = ""
 }
