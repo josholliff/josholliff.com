@@ -1,0 +1,26 @@
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+crash.*.log
+.terraformrc
+terraform.rc
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Local variable files (may contain sensitive values)
+*.tfvars
+*.tfvars.json
+!*.tfvars.example
+
+# Lock file is committed intentionally (see terraform/.terraform.lock.hcl)
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
