@@ -5,8 +5,20 @@ location            = "eastus2"
 static_web_app_name = "josholliff-com"
 sku_tier            = "Free"
 
-# Set to attach a custom domain (requires DNS records for validation).
+# Attach a custom domain. Terraform creates the Azure DNS zone plus the apex
+# ALIAS, validation TXT, and (optionally) www CNAME records. After apply, point
+# your registrar at the name servers from the dns_zone_name_servers output.
 # custom_domain = "josholliff.com"
+# enable_www    = true
+# If the DNS zone name or resource group differ from the defaults, set these:
+# dns_zone_name                = "josholliff.com"
+# dns_zone_resource_group_name = "josholliff-com-rg"
+
+# Let Terraform push the deployment token to GitHub as the
+# AZURE_STATIC_WEB_APPS_API_TOKEN Actions secret (needs GITHUB_TOKEN env var).
+manage_github_secret = true
+github_owner         = "josholliff"
+github_repository    = "josholliff.com"
 
 tags = {
   project   = "josholliff.com"

@@ -51,24 +51,73 @@ terraform output -raw deployment_token
 
 ## Wire up deployment
 
-Add the token as a repository secret so the workflow can publish content:
+The `.github/workflows/deploy.yml` workflow uploads `src/` to the Static Web App
+on every push to `main` (and builds preview environments for PRs). It needs one
+repository secret, `AZURE_STATIC_WEB_APPS_API_TOKEN`, set to the deployment
+token. Two ways to set it:
 
-- **Secret name:** `AZURE_STATIC_WEB_APPS_API_TOKEN`
-- **Value:** the `deployment_token` output above
+**Option 1 — Terraform sets it for you (recommended).** In `terraform.tfvars`:
 
-Push to `main` (or merge a PR) and the workflow deploys `src/` automatically.
-The live URL is the `static_web_app_default_hostname` output
-(`https://<name>.azurestaticapps.net`).
+```hcl
+manage_github_secret = true
+github_owner         = "josholliff"
+github_repository    = "josholliff.com"
+```
 
-## Custom domain (optional)
-
-Set `custom_domain` in `terraform.tfvars` (e.g. `josholliff.com`) and re-apply.
-For an apex domain, read the validation token and create the matching DNS record
-at your DNS provider, then re-apply so validation completes:
+Export a GitHub token with rights to manage the repo's Actions secrets, then
+apply:
 
 ```bash
-terraform output -raw custom_domain_validation_token
+export GITHUB_TOKEN=ghp_xxx   # PowerShell: $env:GITHUB_TOKEN="ghp_xxx"
+terraform apply
 ```
+
+Terraform writes the `AZURE_STATIC_WEB_APPS_API_TOKEN` secret from the app's live
+token — no copy-paste, and it stays in sync on future applies.
+
+**Option 2 — set it manually.** Copy `terraform output -raw deployment_token`
+into GitHub → repo **Settings → Secrets and variables → Actions** → new secret
+named `AZURE_STATIC_WEB_APPS_API_TOKEN`.
+
+Either way, push to `main` (or merge a PR) and the workflow deploys `src/`
+automatically. The live URL is the `static_web_app_default_hostname` output
+(`https://<name>.azurestaticapps.net`).
+
+## Custom domain (Azure DNS)
+
+Terraform **creates and owns the Azure DNS zone** plus the Static Web App
+custom-domain registration and all records, end-to-end. Set in
+`terraform.tfvars`:
+
+```hcl
+custom_domain = "josholliff.com"
+enable_www    = true
+# dns_zone_resource_group_name = "josholliff-com-rg"  # RG for the zone (must exist)
+```
+
+Then `terraform apply`. Terraform creates the **`azurerm_dns_zone`** and:
+
+| Record | Name | Type  | Points to                                  |
+| ------ | ---- | ----- | ------------------------------------------ |
+| apex   | `@`  | A     | ALIAS → the Static Web App resource        |
+| valid. | `@`  | TXT   | the apex validation token                  |
+| www    | `www`| CNAME | `<name>.azurestaticapps.net`               |
+
+Because the zone is brand new, its Azure name servers must be set as the
+delegation (NS) records at your **domain registrar** before validation and TLS
+can complete. Read them after apply and update the registrar:
+
+```bash
+terraform output -json dns_zone_name_servers
+```
+
+Apex validation via `dns-txt-token` is asynchronous — the provider does not wait
+for it, and the TXT record is written from the token in the same apply. Once the
+registrar delegation points at the Azure name servers, Azure completes validation
+and issues the managed TLS certificate (NS delegation can take up to ~48h to
+propagate, though it's usually much faster). The zone is created in
+`resource_group_name` by default; set `dns_zone_resource_group_name` to place it
+in a different (already existing) resource group.
 
 ## Local preview
 
