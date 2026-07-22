@@ -60,15 +60,33 @@ Push to `main` (or merge a PR) and the workflow deploys `src/` automatically.
 The live URL is the `static_web_app_default_hostname` output
 (`https://<name>.azurestaticapps.net`).
 
-## Custom domain (optional)
+## Custom domain (Azure DNS)
 
-Set `custom_domain` in `terraform.tfvars` (e.g. `josholliff.com`) and re-apply.
-For an apex domain, read the validation token and create the matching DNS record
-at your DNS provider, then re-apply so validation completes:
+The domain is hosted in an **Azure DNS zone**, so Terraform manages both the
+Static Web App custom-domain registration and the DNS records end-to-end. Set in
+`terraform.tfvars`:
 
-```bash
-terraform output -raw custom_domain_validation_token
+```hcl
+custom_domain = "josholliff.com"
+enable_www    = true
+# dns_zone_resource_group_name = "josholliff-com-rg"  # if the zone RG differs
 ```
+
+Then `terraform apply` once. Terraform creates:
+
+| Record | Name | Type  | Points to                                  |
+| ------ | ---- | ----- | ------------------------------------------ |
+| apex   | `@`  | A     | ALIAS → the Static Web App resource        |
+| valid. | `@`  | TXT   | the apex validation token                  |
+| www    | `www`| CNAME | `<name>.azurestaticapps.net`               |
+
+Apex validation via `dns-txt-token` is asynchronous — the provider does not wait
+for it, and the TXT record is written from the token in the same apply, so no
+second run is needed. Azure completes validation and issues the managed TLS
+certificate within a few minutes (apex changes can take up to ~an hour to fully
+propagate). The `data.azurerm_dns_zone` lookup requires the zone to already
+exist; set `dns_zone_resource_group_name` if it lives in a different RG than the
+app.
 
 ## Local preview
 

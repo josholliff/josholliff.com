@@ -5,8 +5,13 @@ location            = "eastus2"
 static_web_app_name = "josholliff-com"
 sku_tier            = "Free"
 
-# Set to attach a custom domain (requires DNS records for validation).
+# Attach a custom domain hosted in an existing Azure DNS zone. Terraform will
+# create the apex ALIAS, validation TXT, and (optionally) www CNAME records.
 # custom_domain = "josholliff.com"
+# enable_www    = true
+# If the DNS zone name or resource group differ from the defaults, set these:
+# dns_zone_name                = "josholliff.com"
+# dns_zone_resource_group_name = "josholliff-com-rg"
 
 tags = {
   project   = "josholliff.com"
