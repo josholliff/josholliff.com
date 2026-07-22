@@ -6,10 +6,16 @@ static_web_app_name = "josholliff-com"
 sku_tier            = "Free"
 
 # Attach a custom domain. Terraform creates the Azure DNS zone plus the apex
-# ALIAS, validation TXT, and (optionally) www CNAME records. After apply, point
-# your registrar at the name servers from the dns_zone_name_servers output.
+# ALIAS + validation TXT records. After apply, point your registrar at the name
+# servers from the dns_zone_name_servers output.
+#
+# For a BRAND-NEW zone this is two-phase (see README "Custom domain"):
+#   1) custom_domain set, enable_www = false  -> apply, then delegate registrar
+#   2) after delegation resolves, enable_www = true -> apply again to add www
+# www uses cname-delegation, which only validates once the domain is delegated,
+# so enabling it before delegation makes the apply hang.
 # custom_domain = "josholliff.com"
-# enable_www    = true
+# enable_www    = false
 # If the DNS zone name or resource group differ from the defaults, set these:
 # dns_zone_name                = "josholliff.com"
 # dns_zone_resource_group_name = "josholliff-com-rg"

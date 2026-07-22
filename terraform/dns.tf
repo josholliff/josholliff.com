@@ -7,9 +7,9 @@ locals {
   dns_zone_rg   = coalesce(var.dns_zone_resource_group_name, var.resource_group_name)
 }
 
-# Azure DNS zone for the custom domain, created and owned by this stack. After
-# first apply, delegate the domain at your registrar to the name servers exported
-# in the `dns_zone_name_servers` output.
+# Create and own the Azure DNS zone for the domain. After the first apply, point
+# your registrar's name servers at the values in the `dns_zone_name_servers`
+# output so this zone becomes authoritative for the domain.
 resource "azurerm_dns_zone" "this" {
   count               = local.manage_custom_domain ? 1 : 0
   name                = local.dns_zone_name

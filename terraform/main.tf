@@ -23,6 +23,13 @@ resource "azurerm_static_web_app" "this" {
 # dns-txt-token validation is asynchronous: the provider returns immediately with
 # a validation token and does not wait for DNS to propagate, so there is no
 # chicken-and-egg deadlock with the TXT record created from that token.
+# The apex custom-domain resource was previously named ".this". This moved block
+# renames it in state instead of destroying and recreating the existing binding.
+moved {
+  from = azurerm_static_web_app_custom_domain.this
+  to   = azurerm_static_web_app_custom_domain.apex
+}
+
 resource "azurerm_static_web_app_custom_domain" "apex" {
   count = local.manage_custom_domain ? 1 : 0
 
@@ -31,8 +38,12 @@ resource "azurerm_static_web_app_custom_domain" "apex" {
   validation_type   = "dns-txt-token"
 }
 
-# www subdomain uses CNAME delegation, which validates against the CNAME record
-# managed in dns.tf (hence the explicit dependency).
+# www subdomain uses CNAME delegation. Azure validates it by resolving
+# www.<domain> on the public internet, so it can only be created AFTER the zone
+# is delegated at the registrar. For a brand-new zone, keep enable_www = false on
+# the first apply, delegate the name servers, then set enable_www = true and
+# apply again — otherwise this resource hangs waiting on a CNAME that isn't
+# publicly resolvable yet. See README "Custom domain (Azure DNS)".
 resource "azurerm_static_web_app_custom_domain" "www" {
   count = local.manage_custom_domain && var.enable_www ? 1 : 0
 
