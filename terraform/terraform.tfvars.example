@@ -1,0 +1,14 @@
+# Copy to terraform.tfvars and adjust as needed.
+
+resource_group_name = "josholliff-com-rg"
+location            = "eastus2"
+static_web_app_name = "josholliff-com"
+sku_tier            = "Free"
+
+# Set to attach a custom domain (requires DNS records for validation).
+# custom_domain = "josholliff.com"
+
+tags = {
+  project   = "josholliff.com"
+  managedBy = "terraform"
+}
