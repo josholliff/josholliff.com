@@ -28,7 +28,7 @@ variable "sku_tier" {
 }
 
 variable "custom_domain" {
-  description = "Optional apex/custom domain to attach (e.g. \"josholliff.com\"). Leave empty to skip. When set, the required Azure DNS records (apex ALIAS, validation TXT, and optional www CNAME) are managed automatically in an existing Azure DNS zone."
+  description = "Optional apex/custom domain to attach (e.g. \"josholliff.com\"). Leave empty to skip. When set, Terraform creates the Azure DNS zone and all required records (apex ALIAS, validation TXT, and optional www CNAME)."
   type        = string
   default     = ""
 }
@@ -40,13 +40,13 @@ variable "enable_www" {
 }
 
 variable "dns_zone_name" {
-  description = "Name of the existing Azure DNS zone hosting the custom domain. Defaults to custom_domain when empty."
+  description = "Name of the Azure DNS zone to create for the custom domain. Defaults to custom_domain when empty."
   type        = string
   default     = ""
 }
 
 variable "dns_zone_resource_group_name" {
-  description = "Resource group of the existing Azure DNS zone. Defaults to resource_group_name when empty. Set this if your DNS zone lives in a different resource group than the Static Web App."
+  description = "Resource group in which to create the Azure DNS zone. Defaults to resource_group_name when empty. If set to a different resource group, that group must already exist."
   type        = string
   default     = ""
 }

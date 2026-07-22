@@ -62,17 +62,17 @@ The live URL is the `static_web_app_default_hostname` output
 
 ## Custom domain (Azure DNS)
 
-The domain is hosted in an **Azure DNS zone**, so Terraform manages both the
-Static Web App custom-domain registration and the DNS records end-to-end. Set in
+Terraform **creates and owns the Azure DNS zone** plus the Static Web App
+custom-domain registration and all records, end-to-end. Set in
 `terraform.tfvars`:
 
 ```hcl
 custom_domain = "josholliff.com"
 enable_www    = true
-# dns_zone_resource_group_name = "josholliff-com-rg"  # if the zone RG differs
+# dns_zone_resource_group_name = "josholliff-com-rg"  # RG for the zone (must exist)
 ```
 
-Then `terraform apply` once. Terraform creates:
+Then `terraform apply`. Terraform creates the **`azurerm_dns_zone`** and:
 
 | Record | Name | Type  | Points to                                  |
 | ------ | ---- | ----- | ------------------------------------------ |
@@ -80,13 +80,21 @@ Then `terraform apply` once. Terraform creates:
 | valid. | `@`  | TXT   | the apex validation token                  |
 | www    | `www`| CNAME | `<name>.azurestaticapps.net`               |
 
+Because the zone is brand new, its Azure name servers must be set as the
+delegation (NS) records at your **domain registrar** before validation and TLS
+can complete. Read them after apply and update the registrar:
+
+```bash
+terraform output -json dns_zone_name_servers
+```
+
 Apex validation via `dns-txt-token` is asynchronous — the provider does not wait
-for it, and the TXT record is written from the token in the same apply, so no
-second run is needed. Azure completes validation and issues the managed TLS
-certificate within a few minutes (apex changes can take up to ~an hour to fully
-propagate). The `data.azurerm_dns_zone` lookup requires the zone to already
-exist; set `dns_zone_resource_group_name` if it lives in a different RG than the
-app.
+for it, and the TXT record is written from the token in the same apply. Once the
+registrar delegation points at the Azure name servers, Azure completes validation
+and issues the managed TLS certificate (NS delegation can take up to ~48h to
+propagate, though it's usually much faster). The zone is created in
+`resource_group_name` by default; set `dns_zone_resource_group_name` to place it
+in a different (already existing) resource group.
 
 ## Local preview
 
