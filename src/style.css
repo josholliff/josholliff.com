@@ -310,7 +310,13 @@ footer {
   }
 
   .cert-list li {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .cert-body {
     flex-direction: column;
+    align-items: flex-start;
     gap: 2px;
   }
 
