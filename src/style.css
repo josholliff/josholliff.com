@@ -202,6 +202,26 @@ h2 {
   white-space: nowrap;
 }
 
+.edu-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.edu-badge {
+  flex: 0 0 auto;
+  width: 56px;
+  height: 64px;
+  display: block;
+}
+.edu-body h3 {
+  margin: 0 0 4px;
+  font-size: 1rem;
+  color: var(--fg);
+}
+.edu-body .job-loc {
+  margin: 0;
+}
+
 .contact-list {
   list-style: none;
   padding: 0;

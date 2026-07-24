@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 116" role="img" aria-label="Seminole State College of Florida">
+  <defs>
+    <linearGradient id="s-ring" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4c40a"/>
+      <stop offset="1" stop-color="#1b4aa0"/>
+    </linearGradient>
+  </defs>
+  <polygon points="50,2 96,29 96,87 50,114 4,87 4,29"
+           fill="#0c1622" stroke="url(#s-ring)" stroke-width="4"/>
+  <polygon points="50,11 88,33 88,83 50,105 12,83 12,33"
+           fill="none" stroke="#1b4aa0" stroke-width="1.5" opacity="0.6"/>
+
+  <!-- Shield mark with gold swoosh -->
+  <g transform="translate(50,32)">
+    <path d="M-13,-11 L13,-11 Q15,-11 15,-8 L15,3 Q15,13 0,20 Q-15,13 -15,3 L-15,-8 Q-15,-11 -13,-11 Z"
+          fill="#1b4aa0" stroke="#dbe6f2" stroke-width="1"/>
+    <path d="M-8,-4 Q6,-9 12,-1" fill="none" stroke="#f4c40a" stroke-width="3.2" stroke-linecap="round"/>
+    <path d="M-8,3 L4,3 Q9,3 9,7 Q9,11 3,11" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
+  </g>
+
+  <text x="50" y="64" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif"
+        font-size="9" font-weight="700" fill="#dbe6f2">SEMINOLE</text>
+  <text x="50" y="74" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif"
+        font-size="9" font-weight="700" fill="#dbe6f2">STATE</text>
+  <text x="50" y="84" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif"
+        font-size="9" font-weight="700" fill="#dbe6f2">COLLEGE</text>
+  <rect x="24" y="90" width="52" height="13" rx="2" fill="#f4c40a"/>
+  <text x="50" y="99.5" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif"
+        font-size="6.5" font-weight="700" letter-spacing="1.5" fill="#0c1622">OF FLORIDA</text>
+</svg>
