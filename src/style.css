@@ -238,25 +238,6 @@ h2 {
   text-decoration: underline;
 }
 
-#sysinfo .sysinfo {
-  margin: 0;
-  font-family: inherit;
-  font-size: 0.9rem;
-  line-height: 1.5;
-  white-space: pre-wrap;
-  overflow-x: auto;
-}
-.si-line { display: inline; }
-.si-key { color: var(--dim); }
-.si-dot { color: var(--line); }
-.si-val { color: var(--accent); }
-.si-val.pending { color: var(--dim); }
-.sysinfo-note {
-  margin: 14px 0 0;
-  color: var(--dim);
-  font-size: 0.78rem;
-}
-
 footer {
   margin-top: 48px;
   padding-top: 16px;

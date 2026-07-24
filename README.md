@@ -25,7 +25,6 @@ lives in this repo and ships automatically on every push to `main`.
 - 🖥️ **Retro CRT theme** — scanline overlay, vignette, monospace DOS font, understated black / silver / blue palette.
 - 🏆 **Certification badges** — self-contained hexagon SVGs beside each Microsoft cert (blue *Associate*, silver *Fundamentals*; expired certs greyed).
 - 🎓 **Education badge** — a matching hex badge for Seminole State College.
-- 🧾 **`> visitor.sys` panel** — a live, client-side readout of the visitor's own IP / location / ISP, browser, OS, device, screen, hardware, timezone, a ticking clock, and connection. Nothing is stored or sent.
 - 📱 **Responsive** and **accessible** (semantic markup, alt text, reduced-color-friendly).
 - 🔗 **Social-ready** — favicon plus Open Graph / Twitter card image for clean link previews.
 
@@ -46,7 +45,7 @@ lives in this repo and ships automatically on every push to `main`.
 ├── src/                        # the deployed site
 │   ├── index.html
 │   ├── style.css
-│   ├── script.js               # year + the visitor.sys panel
+│   ├── script.js               # sets the footer year
 │   ├── favicon.svg
 │   ├── og.png                  # social-share card
 │   ├── resume.pdf
@@ -88,9 +87,6 @@ The site is static — no toolchain required:
 cd src
 python3 -m http.server 8080     # then open http://localhost:8080
 ```
-
-The IP/geo lookup in `visitor.sys` calls a public API at runtime, so those
-fields show `unavailable` offline; everything else works locally.
 
 ## Infrastructure & deployment
 
