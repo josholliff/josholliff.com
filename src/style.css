@@ -3,7 +3,7 @@
 :root {
   --bg: #000000;      /* black */
   --fg: #c0c0c0;      /* VGA silver */
-  --accent: #12a8a0;  /* Win95 teal */
+  --accent: #5b9bd5;  /* DOS-editor blue */
   --dim: #7f8886;     /* muted gray */
   --line: #232323;    /* hairline gray */
 }
@@ -134,7 +134,7 @@ h2 {
 .job-head h3 {
   margin: 0;
   font-size: 1rem;
-  color: var(--fg);
+  color: var(--accent);
 }
 .job-date {
   color: var(--dim);
@@ -154,7 +154,7 @@ h2 {
   margin-bottom: 6px;
 }
 .job li::marker {
-  color: var(--dim);
+  color: var(--accent);
 }
 
 .cert-list {
@@ -216,7 +216,7 @@ h2 {
 .edu-body h3 {
   margin: 0 0 4px;
   font-size: 1rem;
-  color: var(--fg);
+  color: var(--accent);
 }
 .edu-body .job-loc {
   margin: 0;
