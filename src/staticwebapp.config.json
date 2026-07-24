@@ -1,7 +1,7 @@
 {
   "trailingSlash": "auto",
   "mimeTypes": {
-    ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ".pdf": "application/pdf"
   },
   "globalHeaders": {
     "X-Content-Type-Options": "nosniff",
