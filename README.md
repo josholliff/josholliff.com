@@ -49,7 +49,7 @@ lives in this repo and ships automatically on every push to `main`.
 │   ├── script.js               # year + the visitor.sys panel
 │   ├── favicon.svg
 │   ├── og.png                  # social-share card
-│   ├── resume.docx
+│   ├── resume.pdf
 │   ├── staticwebapp.config.json
 │   └── badges/                 # self-contained SVG cert / school badges
 ├── terraform/                  # all Azure + GitHub infrastructure
