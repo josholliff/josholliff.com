@@ -164,14 +164,33 @@ h2 {
 }
 .cert-list li {
   display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 2px 16px;
-  padding: 8px 0;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
   border-bottom: 1px solid var(--line);
 }
 .cert-list li:last-child {
   border-bottom: none;
+}
+.cert-badge {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 56px;
+  display: block;
+}
+.cert-body {
+  display: flex;
+  flex: 1 1 auto;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 2px 16px;
+}
+.cert-expired {
+  opacity: 0.55;
+}
+.cert-expired .cert-badge {
+  filter: grayscale(1);
 }
 .cert-list strong {
   color: var(--fg);
@@ -197,6 +216,25 @@ h2 {
 }
 .contact-list a:hover {
   text-decoration: underline;
+}
+
+#sysinfo .sysinfo {
+  margin: 0;
+  font-family: inherit;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+.si-line { display: inline; }
+.si-key { color: var(--dim); }
+.si-dot { color: var(--line); }
+.si-val { color: var(--accent); }
+.si-val.pending { color: var(--dim); }
+.sysinfo-note {
+  margin: 14px 0 0;
+  color: var(--dim);
+  font-size: 0.78rem;
 }
 
 footer {
