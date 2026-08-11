@@ -32,7 +32,7 @@ lives in this repo and ships automatically on every push to `main`.
 
 | Layer | Choice |
 |---|---|
-| Site | Hand-written HTML / CSS / vanilla JS — no framework, no build step |
+| Site |  HTML / CSS / vanilla JS — no framework, no build step |
 | Hosting | Azure Static Web Apps (Free tier, free managed TLS) |
 | DNS | Azure DNS zone (apex `ALIAS` + `www`), managed by Terraform |
 | IaC | Terraform (`hashicorp/azurerm` ~> 4, `integrations/github` ~> 6) |
