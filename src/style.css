@@ -206,12 +206,13 @@ h2 {
 .edu-item {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 14px;
 }
 .edu-badge {
   flex: 0 0 auto;
-  width: 110px;
-  height: auto;
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
   display: block;
 }
 .edu-body h3 {
