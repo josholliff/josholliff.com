@@ -174,8 +174,9 @@ h2 {
 }
 .cert-badge {
   flex: 0 0 auto;
-  width: 48px;
+  width: 56px;
   height: 56px;
+  object-fit: contain;
   display: block;
 }
 .cert-body {

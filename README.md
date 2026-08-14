@@ -23,8 +23,8 @@ lives in this repo and ships automatically on every push to `main`.
 ## Features
 
 - 🖥️ **Retro CRT theme** — scanline overlay, vignette, monospace DOS font, understated black / silver / blue palette.
-- 🏆 **Certification badges** — self-contained hexagon SVGs beside each Microsoft cert (blue *Associate*, silver *Fundamentals*; expired certs greyed).
-- 🎓 **Education badge** — a matching hex badge for Seminole State College.
+- 🏆 **Certification badges** — the official Microsoft and HashiCorp badges beside each cert (expired certs greyed).
+- 🎓 **Education badge** — a themed hex badge for Seminole State College.
 - 📱 **Responsive** and **accessible** (semantic markup, alt text, reduced-color-friendly).
 - 🔗 **Social-ready** — favicon plus Open Graph / Twitter card image for clean link previews.
 
@@ -50,7 +50,7 @@ lives in this repo and ships automatically on every push to `main`.
 │   ├── og.png                  # social-share card
 │   ├── resume.pdf
 │   ├── staticwebapp.config.json
-│   └── badges/                 # self-contained SVG cert / school badges
+│   └── badges/                 # official cert badges + a themed school badge
 ├── terraform/                  # all Azure + GitHub infrastructure
 │   ├── providers.tf
 │   ├── main.tf                 # resource group, Static Web App, custom domains
