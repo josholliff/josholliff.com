@@ -207,19 +207,12 @@ h2 {
   display: flex;
   align-items: center;
   gap: 18px;
-  flex-wrap: wrap;
 }
-.edu-logo {
+.edu-badge {
   flex: 0 0 auto;
-  background: #ffffff;
-  border-radius: 10px;
-  padding: 12px 16px;
-  display: inline-flex;
-}
-.edu-logo img {
-  display: block;
-  width: 190px;
+  width: 110px;
   height: auto;
+  display: block;
 }
 .edu-body h3 {
   margin: 0 0 4px;
